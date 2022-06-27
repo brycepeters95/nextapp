@@ -1,6 +1,8 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-}
+const { withPlausibleProxy } = require("next-plausible");
 
-module.exports = nextConfig
+module.exports = withPlausibleProxy()({
+  images: {
+    domains: ["cdn.brawlify.com"],
+    minimumCacheTTL: 6000000,
+  },
+});

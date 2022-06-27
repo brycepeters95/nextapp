@@ -1,0 +1,32 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
+}
+
+datasource db {
+  provider             = "mysql"
+  url                  = env("DATABASE_URL")
+   shadowDatabaseUrl    = env("SHADOW_URL")
+  referentialIntegrity = "prisma"
+}
+
+model Vote {
+  id             String   @id @default(cuid())
+  createdAt      DateTime @default(now())
+  
+  votedFor       Brawler  @relation(name: "votesFor", fields: [votedForId], references: [id])
+  votedForId     Int
+  votedAgainst   Brawler  @relation(name: "votesAgainst", fields: [votedAgainstId], references: [id])
+  votedAgainstId Int
+
+  @@index([votedForId])
+  @@index([votedAgainstId])
+}
+
+model Brawler {
+  id          Int    @id
+  name        String
+  spriteUrl   String
+  VoteFor     Vote[] @relation("votesFor")
+  VoteAgainst Vote[] @relation("votesAgainst")
+}
